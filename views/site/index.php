@@ -11,6 +11,8 @@ $this->title = 'My Yii Application';
 
         <p class="lead">You have successfully created your Yii-powered application.</p>
 
+        <?php var_dump($_SERVER['REMOTE_ADDR']); ?>
+        
         <p><a class="btn btn-lg btn-success" href="https://www.yiiframework.com">Get started with Yii</a></p>
     </div>
 
