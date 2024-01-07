@@ -47,6 +47,11 @@ class ArticleController extends Controller
         ]);
     }
 
+    public function actionSetImage()
+    {
+        die('страничка загрузки картинки)');
+    }
+
     /**
      * Displays a single Article model.
      * @param int $id ID
