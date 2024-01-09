@@ -3,6 +3,9 @@
 namespace app\models;
 
 use Yii;
+use app\models\ImageUpload;
+use app\models\Category;
+
 
 /**
  * This is the model class for table "article".
@@ -64,23 +67,39 @@ class Article extends \yii\db\ActiveRecord
         ];
     }
 
-    /**
-     * Gets query for [[ArticleTags]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getArticleTags()
-    {
-        return $this->hasMany(ArticleTag::class, ['article_id' => 'id']);
+    public function saveImage($filename) {
+        $this->image = $filename;
+        return $this->save(false);
     }
 
-    /**
-     * Gets query for [[Comments]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getComments()
+    public function getImage()
     {
-        return $this->hasMany(Comment::class, ['article_id' => 'id']);
+        return $this->image ? '/uploads/' . $this->image : '/no-image.png';
+    }
+
+    public function deleteImage()
+    {
+        $imageUploadModel = new ImageUpload();
+        $imageUploadModel->deleteCurrentImage($this->image);
+    }
+
+    public function beforeDelete() {
+        $this->deleteImage();
+        return parent::beforeDelete();
+    }
+
+    public function getCategory()
+    {
+        return $this->hasOne(Category::className(), ['id' => 'category_id']);
+    }
+
+    public function saveCategory($category_id)
+    {
+        $category = Category::findOne($category_id);
+        if ($category != null) 
+        {
+            $this->link('category', $category);
+            return true;
+        }
     }
 }
