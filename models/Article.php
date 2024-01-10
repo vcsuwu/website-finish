@@ -133,5 +133,10 @@ class Article extends \yii\db\ActiveRecord
         return false;
     }
 
+    public function getDate()
+    {
+        return Yii::$app->formatter->asDate($this->date);
+    }
+
 
 }
