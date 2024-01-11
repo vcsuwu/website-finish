@@ -12,10 +12,10 @@ services:
   mysql:
     image: mysql:latest
     environment:
-    - MYSQL_ROOT_PASSWORD=root
-    - MYSQL_DATABASE=yii
-    - MYSQL_USER=yii
-    - MYSQL_PASSWORD=yii
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=yii
+      - MYSQL_USER=yii
+      - MYSQL_PASSWORD=yii
   phpmyadmin:
         image: phpmyadmin/phpmyadmin
         ports:
