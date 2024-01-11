@@ -88,34 +88,7 @@ class SiteController extends Controller
      *
      * @return Response|string
      */
-    public function actionLogin()
-    {
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
-
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
-        }
-
-        $model->password = '';
-        return $this->render('login', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Logout action.
-     *
-     * @return Response
-     */
-    public function actionLogout()
-    {
-        Yii::$app->user->logout();
-
-        return $this->goHome();
-    }
+    
 
     /**
      * Displays contact page.
@@ -149,15 +122,37 @@ class SiteController extends Controller
     {
         $article = Article::findOne($id);
         $tags = $article->getSelectedTags();
+        $popular = Article::find()->orderBy('viewed desc')->limit(3)->all();
+        $recent = Article::find()->orderBy('date asc')->limit(4)->all();
+        $categories = Category::find()->all();
+        $comments = $article->comments;
 
         return $this->render('single', [
             'article'=>$article,
             'tags'=>$tags,
+            'popular'=>$popular,
+            'recent'=>$recent,
+            'categories'=>$categories,
         ]);
     }
 
-    public function actionCategory()
+    public function actionCategory($id)
     {
-        return $this->render('category');
+        $query = Article::find()->where(['category_id'=>$id]);
+        $count = $query->count();
+        $pagination = new Pagination(['totalCount' => $count, 'pageSize'=>6]);
+        $articles = $query->offset($pagination->offset)
+            ->limit($pagination->limit)
+            ->all();
+        $popular = Article::find()->orderBy('viewed desc')->limit(3)->all();
+        $recent = Article::find()->orderBy('date asc')->limit(4)->all();
+        $categories = Category::find()->all();
+        return $this->render('category', [
+            'articles' => $articles,
+            'pagination' => $pagination,
+            'popular' => $popular,
+            'recent' => $recent,
+            'categories' => $categories,
+        ]);
     }
 }

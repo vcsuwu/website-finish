@@ -8,6 +8,7 @@ use app\models\Category;
 use app\models\Tag;
 use yii\helpers\ArrayHelper;
 use app\models\ArticleTag;
+use app\models\Comment;
 
 
 /**
@@ -138,5 +139,15 @@ class Article extends \yii\db\ActiveRecord
         return Yii::$app->formatter->asDate($this->date);
     }
 
+    public function saveArticle()
+    {
+        $this->user_id = Yii::$app->user->id;
+        $this->save();
+    }
+
+    public function getComments()
+    {
+        return $this->hasMany(Comment::classname(), ['article_id'=>'id']);
+    }
 
 }
