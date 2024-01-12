@@ -32,7 +32,7 @@ use yii\widgets\LinkPager;
                                     </p>
                                 </div>
                                 <div class="social-share">
-                                    <span class="social-share-title pull-left text-capitalize">By Rubel On <?= $article->getDate(); ?></span>
+                                    <span class="social-share-title pull-left text-capitalize">Создан <?= $article->author->name ?>, <?= $article->getDate(); ?> числа</span>
 
                                 </div>
                             </div>

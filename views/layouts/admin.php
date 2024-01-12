@@ -42,6 +42,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
             ['label' => 'Home', 'url' => ['/admin']],
             ['label' => 'Articles', 'url' => ['/admin/article']],
             ['label' => 'Categories', 'url' => ['/admin/category']],
+            ['label' => 'Comments', 'url' => ['/admin/comment']],
             ['label' => 'Tags', 'url' => ['/admin/tag']],
         ]
     ]);

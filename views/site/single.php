@@ -1,6 +1,8 @@
 <?php
 use yii\helpers\Url;
 use app\models\Tag;
+use yii\widgets\ActiveForm;
+
 ?>
 
 
@@ -30,8 +32,7 @@ use app\models\Tag;
                         </div>
 
                         <div class="social-share">
-							<span
-                                    class="social-share-title pull-left text-capitalize">By Rubel On <?= $article->getDate(); ?></span>
+							<span class="social-share-title pull-left text-capitalize">Создан <?= $article->author->name ?>, <?= $article->getDate(); ?></span>
                             <ul class="text-center pull-right">
                                 <li><a class="s-facebook" href="#"><i class="fa fa-facebook"></i></a></li>
                                 <li><a class="s-twitter" href="#"><i class="fa fa-twitter"></i></a></li>
@@ -42,45 +43,48 @@ use app\models\Tag;
                         </div>
                     </div>
                 </article>
-                <div class="bottom-comment"><!--bottom comment-->
-                    <h4>3 comments</h4>
 
-                    <div class="comment-img">
-                        <img class="img-circle" src="../public/images/comment-img.jpg" alt="">
-                    </div>
+                <?php if(!empty($comments)):?>
+                    <?php foreach($comments as $comment):?>
+                        <div class="bottom-comment"><!--bottom comment-->
+                            <div class="comment-img">
+                                <img class="img-circle" src="../public/images/comment-img.jpg" alt="">
+                            </div>
 
-                    <div class="comment-text">
-                        <a href="#" class="replay btn pull-right"> Replay</a>
-                        <h5>Rubel Miah</h5>
+                            <div class="comment-text">
+                                <h5><?= $comment->user->name; ?></h5>
 
-                        <p class="comment-date">
-                            December, 02, 2015 at 5:57 PM
-                        </p>
-
-
-                        <p class="para">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
-                            diam nonumy
-                            eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam
-                            voluptua. At vero eos et cusam et justo duo dolores et ea rebum.</p>
-                    </div>
-                </div>
-                <!-- end bottom comment-->
+                                <p class="comment-date">
+                                    <?= $comment->getDate(); ?>
+                                </p>
 
 
+                                <p class="para"> <?= $comment->text; ?></p>
+                            </div>
+                        </div>
+                        <!-- end bottom comment-->
+                    <?php endforeach; ?>
+                <?php endif;?>
+            <?php if(!Yii::$app->user->isGuest): ?>
                 <div class="leave-comment"><!--leave comment-->
                     <h4>Leave a reply</h4>
 
+                    <?php $form = ActiveForm::begin([
+                        'action'=>['site/comment','id'=>$article->id],
+                        'options'=>['class'=>'form-horizontal contact-form', 'role'=>'form']
+                    ]); ?>
 
-                    <form class="form-horizontal contact-form" role="form" method="post" action="#">
-                        <div class="form-group">
-                            <div class="col-md-12">
-										<textarea class="form-control" rows="6" name="message"
-                                                  placeholder="Write Massage"></textarea>
-                            </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <?= $form->field($commentForm, 'comment')->textarea(['class'=>'form-control','placeholder'=>"Write message"])->label(false) ?>
+
                         </div>
-                        <a href="#" class="btn send-btn">Post Comment</a>
-                    </form>
+                        <button type="submit" class="btn send-btn">Post Comment</button>
+                    </div>
+
+                    <?php ActiveForm::end(); ?>
                 </div><!--end leave comment-->
+            <?php endif; ?>
             </div>
             <?= $this->render('/partials/sidebar',[
                 'popular' => $popular,

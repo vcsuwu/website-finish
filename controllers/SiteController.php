@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\CommentForm;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -67,7 +68,7 @@ class SiteController extends Controller
 
         $query = Article::find();
         $count = $query->count();
-        $pagination = new Pagination(['totalCount' => $count, 'pageSize'=>1]);
+        $pagination = new Pagination(['totalCount' => $count, 'pageSize'=>3]);
         $articles = $query->offset($pagination->offset)
             ->limit($pagination->limit)
             ->all();
@@ -125,7 +126,9 @@ class SiteController extends Controller
         $popular = Article::find()->orderBy('viewed desc')->limit(3)->all();
         $recent = Article::find()->orderBy('date asc')->limit(4)->all();
         $categories = Category::find()->all();
-        $comments = $article->comments;
+        $comments = $article->getComments()->where(['status'=>1])->all();
+        $commentForm = new CommentForm();
+        $article->viewedCounter();
 
         return $this->render('single', [
             'article'=>$article,
@@ -133,6 +136,8 @@ class SiteController extends Controller
             'popular'=>$popular,
             'recent'=>$recent,
             'categories'=>$categories,
+            'comments'=>$comments,
+            'commentForm'=>$commentForm,
         ]);
     }
 
@@ -154,5 +159,19 @@ class SiteController extends Controller
             'recent' => $recent,
             'categories' => $categories,
         ]);
+    }
+
+    public function actionComment($id)
+    {
+        $model = new CommentForm();
+
+        if (Yii::$app->request->isPost)
+        {
+            $model->load(Yii::$app->request->post());
+            if ($model->saveComment($id))
+            {
+                return $this->redirect(['site/view','id'=>$id]);
+            }
+        }
     }
 }

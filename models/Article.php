@@ -78,7 +78,7 @@ class Article extends \yii\db\ActiveRecord
 
     public function getImage()
     {
-        return $this->image ? '/uploads/' . $this->image : '/no-image.png';
+        return $this->image ? '/uploads/' . $this->image : 'https://placehold.co/600x400';
     }
 
     public function deleteImage()
@@ -148,6 +148,17 @@ class Article extends \yii\db\ActiveRecord
     public function getComments()
     {
         return $this->hasMany(Comment::classname(), ['article_id'=>'id']);
+    }
+
+    public function getAuthor()
+    {
+        return $this->hasOne(User::className(), ['id'=>'user_id']);
+    }
+
+    public function viewedCounter()
+    {
+        $this->viewed += 1;
+        return $this->save(false);
     }
 
 }
